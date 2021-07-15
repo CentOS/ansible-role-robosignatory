@@ -1,5 +1,11 @@
 # tasks for fedora-messaging setup
 ---
+- name: Install fedora-messaging packages
+  yum:
+    name:
+    - fedora-messaging
+    state: present
+
 - name: Create /etc/pki/fedora-messaging
   file:
     dest: /etc/pki/fedora-messaging

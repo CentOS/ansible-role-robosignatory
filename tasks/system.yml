@@ -5,12 +5,6 @@
     name: epel-release
     state: present
 
-- name: Add buildtools repo
-  template:
-    src: buildtools.repo.j2
-    dest: /etc/yum.repos.d/buildtools.repo
-    mode: 0644
-
 - name: Add Fedora infra repo GPG key
   copy:
     src: files/{{ robosignatory_buildtools_repo_gpgkey }}

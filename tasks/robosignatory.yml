@@ -4,10 +4,8 @@
   yum:
     name:
     - python3-robosignatory
-    - fedora-messaging
     - trousers
     - tpm-tools
-    - sigul
     state: present
 
 - name: Ensure group "robosignatory" exists
