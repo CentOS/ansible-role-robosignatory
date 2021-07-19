@@ -1,0 +1,73 @@
+# tasks for fedora-messaging setup
+---
+- name: Install fedora-messaging packages
+  yum:
+    name:
+    - fedora-messaging
+    state: present
+
+- name: Create /etc/pki/fedora-messaging
+  file:
+    dest: /etc/pki/fedora-messaging
+    mode: 0775
+    group: root
+    state: directory
+
+- name: Deploy the fedora-messaging CA
+  copy:
+    src: "{{ robosignatory_pki_store }}/fedora-messaging/ca.crt"
+    dest: /etc/pki/fedora-messaging/cacert.pem
+    mode: 0644
+    owner: robosignatory
+    group: robosignatory
+
+- name: Deploy the fedora-messaging cert
+  copy:
+    src: "{{ robosignatory_pki_store }}/rabbitmq-private/centos-robosignatory-private-queue.crt"
+    dest: /etc/pki/fedora-messaging/robosignatory-cert.pem
+    mode: 0644
+    owner: robosignatory
+    group: robosignatory
+
+- name: Deploy the fedora-messaging key
+  copy:
+    src: "{{ robosignatory_pki_store }}/rabbitmq-private/centos-robosignatory-private-queue.key"
+    dest: /etc/pki/fedora-messaging/robosignatory-key.pem
+    mode: 0600
+    owner: robosignatory
+    group: robosignatory
+
+- name: Setup robosignatory config
+  template:
+    src: fedora-messaging/robosignatory.toml.j2
+    dest: /etc/fedora-messaging/robosignatory.toml
+    owner: robosignatory
+    group: robosignatory
+    mode: 0640
+
+- name: Create /etc/systemd/system/fm-consumer@.service.d
+  file:
+    state: directory
+    path: /etc/systemd/system/fm-consumer@.service.d
+    owner: root
+    group: root
+    mode: 0755
+  when:  robosignatory_env  == 'stg'
+
+- name: Configure fm-consumer@.service to run as robosignatory
+  copy:
+    src: robosignatory/fm-consumer@.service
+    dest: /etc/systemd/system/fm-consumer@.service.d/local.conf
+    owner: root
+    group: root
+    mode: 0644
+  when:  robosignatory_env  == 'stg'
+  notify:
+  - reload_systemd
+
+- name: Ensure fedora-messaging is enabled and started
+  service:
+    name: fm-consumer@robosignatory.service
+    enabled: yes
+    state: started
+  when:  robosignatory_env  == 'stg'

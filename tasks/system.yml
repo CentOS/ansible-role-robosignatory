@@ -1,0 +1,18 @@
+# tasks for base system setup
+---
+- name: Enable EPEL for package dependencies
+  yum:
+    name: epel-release
+    state: present
+
+- name: Add Fedora infra repo GPG key
+  copy:
+    src: files/{{ robosignatory_buildtools_repo_gpgkey }}
+    dest: /etc/pki/rpm-gpg/{{ robosignatory_buildtools_repo_gpgkey }}
+    mode: 0644
+
+- name: Add Fedora infra repo
+  copy:
+    src: infrastructure.repo
+    dest: /etc/yum.repos.d/infrastructure.repo
+    mode: 0644

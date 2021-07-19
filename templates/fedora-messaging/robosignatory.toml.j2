@@ -1,0 +1,121 @@
+amqp_url = "{{ robosignatory_fedora_messaging_amqp_url }}"
+
+publish_exchange = "amq.topic"
+passive_declares = true
+
+callback = "robosignatory.consumer:Consumer"
+
+# Don't use topic_prefix, since outgoing message topics are derived from incoming messages.
+# topic_prefix = ""
+
+# Note the double brackets below.
+# To add another binding, add another [[bindings]] section.
+[[bindings]]
+queue = "{{ robosignatory_fedora_messaging_queue }}"
+exchange = "amq.topic"
+routing_keys = [
+    "org.centos.*.pungi.compose.ostree",
+    "org.centos.*.coreos.build.request.artifacts-sign",
+    "org.centos.*.coreos.build.request.ostree-sign",
+    "org.centos.*.buildsys.tag",
+]
+
+[tls]
+ca_cert = "/etc/pki/fedora-messaging/cacert.pem"
+keyfile = "/etc/pki/fedora-messaging/robosignatory-key.pem"
+certfile = "/etc/pki/fedora-messaging/robosignatory-cert.pem"
+
+[client_properties]
+app = "RoboSignatory"
+
+[queues."{{ robosignatory_fedora_messaging_queue }}"]
+durable = true
+auto_delete = false
+exclusive = false
+arguments = {}
+
+[qos]
+prefetch_size = 0
+prefetch_count = 25
+
+[log_config]
+version = 1
+disable_existing_loggers = true
+
+[log_config.formatters.simple]
+format = "[%(name)s %(levelname)s] %(message)s"
+
+[log_config.handlers.console]
+class = "logging.StreamHandler"
+formatter = "simple"
+stream = "ext://sys.stdout"
+
+[log_config.loggers.fedora_messaging]
+level = "INFO"
+propagate = false
+handlers = ["console"]
+
+[log_config.loggers.robosignatory]
+level = "INFO"
+propagate = false
+handlers = ["console"]
+
+[log_config.root]
+level = "INFO"
+handlers = ["console"]
+
+
+# robosignatory consumer configuration
+[consumer_config]
+
+    # Any tag prefixed with "module-" will be considered a module.
+    module_prefixes = ["module-"]
+
+    [consumer_config.signing]
+    backend = "sigul"
+    user = "autopen"
+    passphrase_file = "/etc/sigul/autosign.pass"
+    file_signing_key_passphrase_file = "/etc/sigul/autosign.pass"
+    config_file = "/etc/sigul/client.conf"
+
+    [consumer_config.koji_instances]
+    # The keys here need to be the same in the sigul bridge
+        [consumer_config.koji_instances.primary]
+        url = "{{ robosignatory_kojihub_top_url }}/kojihub"
+        mbs_user = "{{ robosignatory_mbs_user }}/{{ robosignatory_mbs_host }}"
+
+            [consumer_config.koji_instances.primary.options]
+            # Only ssl and kerberos are supported at the moment
+            authmethod = "kerberos"
+            principal = "{{ robosignatory_autosign_user }}/{{ robosignatory_autosign_host }}@{{ robosignatory_autosign_kerberos_realm }}"
+            keytab = "/etc/krb5.{{ robosignatory_autosign_user }}_{{ robosignatory_autosign_host }}.keytab"
+            krb_rdns = {{ robosignatory_autosign_kerberos_rdns | ternary('true', 'false') }}
+
+            # Temporary tags
+
+            # Infra tags
+
+            # Stream tags
+
+            [[consumer_config.koji_instances.primary.tags]]
+            from = "c9s-pending"
+            to = "c9s"
+            key = "{{ (robosignatory_env == 'production')|ternary('stream-9', 'testkey') }}"
+            keyid = "{{ (robosignatory_env == 'production')|ternary('baaaaaad', '00coffee') }}"
+
+            [[consumer_config.koji_instances.primary.tags]]
+            from = "el9-modules-pending"
+            to = "el9-modules"
+            key = "{{ (robosignatory_env == 'production')|ternary('stream-9', 'testkey') }}"
+            keyid = "{{ (robosignatory_env == 'production')|ternary('baaaaaad', '00coffee') }}"
+            type = "modular"
+
+            # Stream side tags
+
+            [consumer_config.koji_instances.primary.tags.sidetags]
+            pattern = 'c9s-build-side-<seq_id>'
+            from = '<sidetag>-signing-pending'
+            to = '<sidetag>-testing-pending'
+            trusted_taggers = ['bodhi']
+
+            # Gated bodhi updates

@@ -1,0 +1,67 @@
+# tasks for role robosignatory setup
+---
+- name: Install robosignatory packages
+  yum:
+    name:
+    - python3-robosignatory
+    - trousers
+    - tpm-tools
+    state: present
+
+- name: Ensure group "robosignatory" exists
+  group:
+    name: robosignatory
+    state: present
+    system: yes
+    # gid: XXX
+
+- name: Ensure user "robosignatory" exists
+  user:
+    name: robosignatory
+    group: robosignatory
+    system: yes
+    home: /etc/robosignatory
+    comment: robosignatory
+    shell: /sbin/nologin
+    # uid: XXX
+
+- name: Ensure config directory /etc/robosignatory/ exists
+  file:
+    path: /etc/robosignatory/
+    state: directory
+    owner: robosignatory
+    group: robosignatory
+    mode: 0750
+
+- name: Install koji config
+  template:
+    src: robosignatory/koji.config.j2
+    dest: /etc/robosignatory/koji.config
+    owner: robosignatory
+    group: robosignatory
+    mode: 0640
+
+- name: Copy koji keytab
+  copy:
+    src: "{{ robosignatory_pki_store }}/krb5/{{ robosignatory_config_krb_keytab }}"
+    dest: /etc/robosignatory/{{ robosignatory_config_krb_keytab }}
+    owner: robosignatory
+    group: robosignatory
+    mode: 0640
+  when: robosignatory_kojihub_auth_type == 'kerberos'
+
+- name: Install koji CA certificate
+  copy:
+    src: "{{ robosignatory_pki_store }}/koji/{{ robosignatory_kojid_serverca }}"
+    dest: /etc/robosignatory/serverca.cert
+    owner: robosignatory
+    group: robosignatory
+    mode: 0640
+
+- name: Allow robosignatory to use systemd-ask-password
+  copy:
+    src: robosignatory/ask-password-robosignatory.conf
+    dest: /etc/tmpfiles.d/ask-password-robosignatory.conf
+    owner: root
+    group: root
+    mode: 0644

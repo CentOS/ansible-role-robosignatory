@@ -1,0 +1,5 @@
+---
+# handlers file for ansible-role-robosignatory
+- name: reload_systemd
+  systemd:
+    daemon_reload: yes

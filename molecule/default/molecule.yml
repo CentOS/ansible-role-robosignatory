@@ -1,0 +1,35 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+platforms:
+  - name: instance
+    box: centos/8
+    memory: 512
+    cpus: 1
+    instance_raw_config_args:
+      - vagrant.plugins = ["vagrant-libvirt"]
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "'vagrant'"
+      synced_folder: false
+    interfaces:
+      - network_name: forwarded_port
+        guest: 80
+        host: 8080
+    provision: no
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        # robosignatory vars
+        robosignatory_env: stg
+        robosignatory_pki_store:  ${MOLECULE_PROJECT_DIRECTORY}/molecule/files/
+verifier:
+  name: ansible
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
