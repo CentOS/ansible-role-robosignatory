@@ -1,6 +1,5 @@
 amqp_url = "{{ robosignatory_fedora_messaging_amqp_url }}"
 
-publish_exchange = "amq.topic"
 passive_declares = true
 
 callback = "robosignatory.consumer:Consumer"
@@ -72,23 +71,26 @@ handlers = ["console"]
     module_prefixes = ["module-"]
 
     [consumer_config.signing]
-    backend = "sigul"
-    user = "autopen"
-    passphrase_file = "/etc/sigul/autosign.pass"
-    file_signing_key_passphrase_file = "/etc/sigul/autosign.pass"
-    config_file = "/etc/sigul/client.conf"
+    backend = "calligrabot"
+    user = "robosignatory"
+    ima_key = "{{ robosignatory_ima_key }}"
+    dry_run = "{{ robosignatory_dry_run }}"
+    principal = "{{ robosignatory_autosign_user }}/{{ robosignatory_autosign_host }}@{{ robosignatory_autosign_kerberos_realm }}"
+    keytab = "/etc/robosignatory/{{ robosignatory_autosign_user }}-{{ robosignatory_autosign_host }}.keytab"
 
     [consumer_config.koji_instances]
     # The keys here need to be the same in the sigul bridge
         [consumer_config.koji_instances.primary]
         url = "{{ robosignatory_kojihub_top_url }}/kojihub"
-        mbs_user = "{{ robosignatory_mbs_user }}/{{ robosignatory_mbs_host }}"
+        weburl = "{{ robosignatory_kojihub_top_url }}/koji"
+        topurl = "{{ robosignatory_kojihub_top_url }}/kojifiles"
+        mbs_user = "{{ robosignatory_mbs_user }}"
 
             [consumer_config.koji_instances.primary.options]
             # Only ssl and kerberos are supported at the moment
             authmethod = "kerberos"
             principal = "{{ robosignatory_autosign_user }}/{{ robosignatory_autosign_host }}@{{ robosignatory_autosign_kerberos_realm }}"
-            keytab = "/etc/krb5.{{ robosignatory_autosign_user }}_{{ robosignatory_autosign_host }}.keytab"
+            keytab = "/etc/robosignatory/{{ robosignatory_autosign_user }}-{{ robosignatory_autosign_host }}.keytab"
             krb_rdns = {{ robosignatory_autosign_kerberos_rdns | ternary('true', 'false') }}
 
             # Temporary tags
@@ -99,23 +101,31 @@ handlers = ["console"]
 
             [[consumer_config.koji_instances.primary.tags]]
             from = "c9s-pending"
-            to = "c9s"
-            key = "{{ (robosignatory_env == 'production')|ternary('stream-9', 'testkey') }}"
-            keyid = "{{ (robosignatory_env == 'production')|ternary('baaaaaad', '00coffee') }}"
+            to = "c9s-pending"
+            key = "{{ robosignatory_signing_key }}"
+            keyid = "{{ robosignatory_signing_keyid }}"
 
             [[consumer_config.koji_instances.primary.tags]]
-            from = "el9-modules-pending"
-            to = "el9-modules"
-            key = "{{ (robosignatory_env == 'production')|ternary('stream-9', 'testkey') }}"
-            keyid = "{{ (robosignatory_env == 'production')|ternary('baaaaaad', '00coffee') }}"
+            from = "el9-modules-gate"
+            to = "el9-modules-gate"
+            key = "{{ robosignatory_signing_key }}"
+            keyid = "{{ robosignatory_signing_keyid }}"
             type = "modular"
 
             # Stream side tags
 
             [consumer_config.koji_instances.primary.tags.sidetags]
-            pattern = 'c9s-build-side-<seq_id>'
-            from = '<sidetag>-signing-pending'
-            to = '<sidetag>-testing-pending'
-            trusted_taggers = ['bodhi']
+            #pattern = 'c9s-build-side-<seq_id>'
+            #from = '<sidetag>-signing-pending'
+            #to = '<sidetag>-testing-pending'
+            #trusted_taggers = ['bodhi']
 
-            # Gated bodhi updates
+
+    [consumer_config.ostree_refs]
+    [consumer_config.coreos]
+        bucket='none'
+        key = 'none'
+        [consumer_config.coreos.aws]
+            region='us-east-2'
+            access_key='nope'
+            access_secret='nope'

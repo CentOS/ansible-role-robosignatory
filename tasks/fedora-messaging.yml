@@ -23,7 +23,7 @@
 
 - name: Deploy the fedora-messaging cert
   copy:
-    src: "{{ robosignatory_pki_store }}/rabbitmq-private/centos-robosignatory-private-queue.crt"
+    src: "{{ robosignatory_fedora_messaging_cert }}"
     dest: /etc/pki/fedora-messaging/robosignatory-cert.pem
     mode: 0644
     owner: robosignatory
@@ -31,7 +31,7 @@
 
 - name: Deploy the fedora-messaging key
   copy:
-    src: "{{ robosignatory_pki_store }}/rabbitmq-private/centos-robosignatory-private-queue.key"
+    src: "{{ robosignatory_fedora_messaging_key }}"
     dest: /etc/pki/fedora-messaging/robosignatory-key.pem
     mode: 0600
     owner: robosignatory
