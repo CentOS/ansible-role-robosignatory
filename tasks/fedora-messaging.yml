@@ -44,6 +44,8 @@
     owner: robosignatory
     group: robosignatory
     mode: 0640
+  notify:
+    - restart robosignatory
 
 - name: Create /etc/systemd/system/fm-consumer@.service.d
   file:
