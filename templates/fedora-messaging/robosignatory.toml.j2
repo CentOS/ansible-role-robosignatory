@@ -112,6 +112,19 @@ handlers = ["console"]
             keyid = "{{ robosignatory_signing_keyid }}"
             type = "modular"
 
+            [[consumer_config.koji_instances.primary.tags]]
+            from = "c8s-pending"
+            to = "c8s-pending"
+            key = "{{ robosignatory_signing_key }}"
+            keyid = "{{ robosignatory_signing_keyid }}"
+
+            [[consumer_config.koji_instances.primary.tags]]
+            from = "el8-modules-gate"
+            to = "el8-modules-gate"
+            key = "{{ robosignatory_signing_key }}"
+            keyid = "{{ robosignatory_signing_keyid }}"
+            type = "modular"
+
             # Stream side tags
 
             [consumer_config.koji_instances.primary.tags.sidetags]
