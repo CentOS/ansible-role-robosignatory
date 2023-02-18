@@ -3,3 +3,9 @@
 - name: reload_systemd
   systemd:
     daemon_reload: yes
+
+- name: restart robosignatory
+  service:
+    name: fm-consumer@robosignatory.service
+    state: restarted
+
