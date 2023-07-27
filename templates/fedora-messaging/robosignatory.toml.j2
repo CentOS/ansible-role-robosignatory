@@ -101,26 +101,26 @@ handlers = ["console"]
 
             [[consumer_config.koji_instances.primary.tags]]
             from = "c9s-pending"
-            to = "c9s-pending"
+            to = "c9s-pending-signed"
             key = "{{ robosignatory_signing_key }}"
             keyid = "{{ robosignatory_signing_keyid }}"
 
             [[consumer_config.koji_instances.primary.tags]]
-            from = "el9-modules-gate"
-            to = "el9-modules-gate"
+            from = "el9-modules-pending"
+            to = "el9-modules-pending-signed"
             key = "{{ robosignatory_signing_key }}"
             keyid = "{{ robosignatory_signing_keyid }}"
             type = "modular"
 
             [[consumer_config.koji_instances.primary.tags]]
             from = "c8s-pending"
-            to = "c8s-pending"
+            to = "c8s-pending-signed"
             key = "{{ robosignatory_signing_key }}"
             keyid = "{{ robosignatory_signing_keyid }}"
 
             [[consumer_config.koji_instances.primary.tags]]
-            from = "el8-modules-gate"
-            to = "el8-modules-gate"
+            from = "el8-modules-pending"
+            to = "el8-modules-pending-signed"
             key = "{{ robosignatory_signing_key }}"
             keyid = "{{ robosignatory_signing_keyid }}"
             type = "modular"
