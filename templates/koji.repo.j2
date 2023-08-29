@@ -1,0 +1,52 @@
+{% if ansible_distribution_major_version == '7' and not ansible_architecture == 'x86_64' %}
+{% set contentdir = 'altarch' %}
+{% else %}
+{% set contentdir = 'centos' %} 
+{% endif %}
+
+{% if ansible_distribution_major_version == '9' %}
+{% if centos_infra_env == 'prod' %}
+[buildtools-common]
+name=CentOS koji repository Prod - el{{ansible_distribution_major_version }}
+baseurl=http://mirror.stream.centos.org/SIGs/9/infra/$basearch/buildtools-common/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-koji
+{% elif centos_infra_env == 'stg' %}
+[buildtools-common]
+name=CentOS koji Staging - el{{ansible_distribution_major_version }}
+baseurl=https://buildlogs.centos.org/centos/9/infra/$basearch/buildtools-common/
+enabled=1
+gpgcheck=0
+{% else %}
+[buildtools-common]
+name=CentOS koji dev - el{{ansible_distribution_major_version }}
+baseurl=https://repo.dev.centos.org/9/infra/buildtools-common/$basearch/
+enabled=1
+gpgcheck=0
+{% endif %}
+
+{% else %}
+
+{% if centos_infra_env == 'prod' %}
+[buildtools-common]
+name=CentOS koji Prod - el{{ansible_distribution_major_version }}
+baseurl=http://mirror.centos.org/{{ contentdir }}/$releasever/infra/$basearch/buildtools-common/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-koji
+{% elif centos_infra_env == 'stg' %}
+[buildtools-common]
+name=CentOS koji Staging - el{{ansible_distribution_major_version }}
+baseurl=https://buildlogs.centos.org/centos/$releasever/infra/$basearch/buildtools-common/
+enabled=1
+gpgcheck=0
+{% else %}
+[buildtools-common]
+name=CentOS koji dev - el{{ansible_distribution_major_version }}
+baseurl=https://repo.dev.centos.org/$releasever/infra/buildtools-common/$basearch/
+enabled=1
+gpgcheck=0
+{% endif %}
+
+{% endif %}

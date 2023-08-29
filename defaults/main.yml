@@ -18,7 +18,9 @@ robosignatory_kojid_serverca: "{{ kojid_serverca | default('koji_ca_cert.crt') }
 
 # robosignatory keytab file distributed from {{robosignatory_pki_store}}
 robosignatory_config_krb_keytab: centos-stream-robosignatory.keytab
+
 # GPG key file for buildtools repo
+robosignatory_buildtools_repo: True
 robosignatory_buildtools_repo_gpgkey: RPM-GPG-KEY-CentOS-Infra
 
 # MBS Kerberos user

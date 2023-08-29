@@ -1,5 +1,7 @@
 # base system setup
 - include_tasks: system.yml
+  tags:
+    - repo
 
 # robosignatory setup
 - include_tasks: robosignatory.yml

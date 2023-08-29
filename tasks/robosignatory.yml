@@ -6,7 +6,7 @@
     - python3-robosignatory
     - trousers
     - tpm-tools
-    state: present
+    state: latest
 
 - name: Ensure group "robosignatory" exists
   group:

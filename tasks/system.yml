@@ -1,18 +1,26 @@
 # tasks for base system setup
 ---
-- name: Enable EPEL for package dependencies
-  yum:
-    name: epel-release
-    state: present
+- name: Importing specific distro variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+  tags:
+    - vars
 
-- name: Add Fedora infra repo GPG key
-  copy:
-    src: files/{{ robosignatory_buildtools_repo_gpgkey }}
-    dest: /etc/pki/rpm-gpg/{{ robosignatory_buildtools_repo_gpgkey }}
+- name: Add the koji buildtools repo if needed
+  template:
+    src: koji.repo.j2
+    dest: /etc/yum.repos.d/koji.repo
     mode: 0644
+  when: robosignatory_buildtools_repo
+  tags:
+    - repo
 
-- name: Add Fedora infra repo
+- name: Adding repo gpg key if needed
   copy:
-    src: infrastructure.repo
-    dest: /etc/yum.repos.d/infrastructure.repo
-    mode: 0644
+    src: "files/{{ robosignatory_buildtools_repo_gpgkey }}"
+    dest: "/etc/pki/rpm-gpg/{{ robosignatory_buildtools_repo_gpgkey }}"
+  when: robosignatory_buildtools_repo
+  tags:
+    - repo
