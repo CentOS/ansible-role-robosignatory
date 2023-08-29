@@ -104,6 +104,7 @@ handlers = ["console"]
             to = "c9s-pending-signed"
             key = "{{ robosignatory_signing_key }}"
             keyid = "{{ robosignatory_signing_keyid }}"
+            skip_untagging = true
 
             [[consumer_config.koji_instances.primary.tags]]
             from = "el9-modules-pending"
@@ -111,12 +112,14 @@ handlers = ["console"]
             key = "{{ robosignatory_signing_key }}"
             keyid = "{{ robosignatory_signing_keyid }}"
             type = "modular"
+            skip_untagging = true
 
             [[consumer_config.koji_instances.primary.tags]]
             from = "c8s-pending"
             to = "c8s-pending-signed"
             key = "{{ robosignatory_signing_key }}"
             keyid = "{{ robosignatory_signing_keyid }}"
+            skip_untagging = true
 
             [[consumer_config.koji_instances.primary.tags]]
             from = "el8-modules-pending"
@@ -124,6 +127,7 @@ handlers = ["console"]
             key = "{{ robosignatory_signing_key }}"
             keyid = "{{ robosignatory_signing_keyid }}"
             type = "modular"
+            skip_untagging = true
 
             # Stream side tags
 
