@@ -100,6 +100,13 @@ handlers = ["console"]
             # Stream tags
 
             [[consumer_config.koji_instances.primary.tags]]
+            from = "c10s-pending"
+            to = "c10s-pending-signed"
+            key = "{{ robosignatory_signing_key }}"
+            keyid = "{{ robosignatory_signing_keyid }}"
+            skip_untagging = true
+
+            [[consumer_config.koji_instances.primary.tags]]
             from = "c9s-pending"
             to = "c9s-pending-signed"
             key = "{{ robosignatory_signing_key }}"
