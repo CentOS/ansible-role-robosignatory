@@ -8,6 +8,7 @@ authtype = {{ robosignatory_kojihub_auth_type }}
 krb_rdns = {{ robosignatory_kojihub_kerberos_rdns | bool }}
 ;the keytab to auth as for automated clients
 keytab = /etc/robosignatory/{{ robosignatory_config_krb_keytab }}
+principal = {{ robosignatory_krb_principal }}
 {% endif %}
 {% if  robosignatory_kojihub_auth_type == 'ssl' %}
 cert = {{ robosignatory_kojihub_ssl_cert }}

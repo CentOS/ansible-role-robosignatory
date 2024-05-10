@@ -5,6 +5,8 @@
 
 # robosignatory setup
 - include_tasks: robosignatory.yml
+  tags:
+    - koji
 
 # fedora-messaging setup
 - include_tasks: fedora-messaging.yml

@@ -40,6 +40,8 @@
     owner: robosignatory
     group: robosignatory
     mode: 0640
+  tags:
+    - koji
 
 - name: Copy koji keytab
   copy:
