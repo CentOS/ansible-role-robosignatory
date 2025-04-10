@@ -1,0 +1,9 @@
+[service/rpm-sign]
+  mechs = krb5
+  cred_store = keytab:/etc/robosignatory/{{ robosignatory_config_krb_keytab }}
+  cred_store = ccache:FILE:/var/lib/gssproxy/clients/krb5cc_%U
+  cred_store = client_keytab:/var/lib/gssproxy/clients/%U.keytab
+  cred_usage = initiate
+  trusted = yes
+  euid = 0
+  program = /usr/bin/rh-signing-client

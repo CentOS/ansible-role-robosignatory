@@ -9,3 +9,8 @@
     name: fm-consumer@robosignatory.service
     state: restarted
 
+- name: restart_gssproxy
+  service:
+    name: gssproxy
+    state: restarted
+
