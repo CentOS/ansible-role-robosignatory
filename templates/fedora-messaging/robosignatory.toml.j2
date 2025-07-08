@@ -34,8 +34,8 @@ exclusive = false
 arguments = {}
 
 [qos]
-prefetch_size = 0
-prefetch_count = 25
+prefetch_size = {{ robosignatory_fedora_messaging_qos_prefetch_size }}  
+prefetch_count = {{ robosignatory_fedora_messaging_qos_prefetch_count }}
 
 [log_config]
 version = 1

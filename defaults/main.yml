@@ -42,3 +42,6 @@ robosignatory_autosign_kerberos_rdns: false
 robosignatory_fedora_messaging_amqp_url: amqps://centos-robosignatory:@rabbitmq.fedoraproject.org/%2Fpubsub
 # fedora-messaging message queue for robosignatory
 robosignatory_fedora_messaging_queue: "robosignatory-{{ robosignatory_env }}"
+# fedora-messaging QoS settings for the subscriber thread
+robosignatory_fedora_messaging_qos_prefetch_size: 0
+robosignatory_fedora_messaging_qos_prefetch_count: 1
