@@ -8,6 +8,8 @@
   tags:
     - koji
     - gssproxy
-
+ 
 # fedora-messaging setup
 - include_tasks: fedora-messaging.yml
+  tags:
+    - config
