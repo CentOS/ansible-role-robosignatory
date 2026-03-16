@@ -1,41 +1,13 @@
 # tasks for fedora-messaging setup
 ---
-- name: Install fedora-messaging packages
-  yum:
-    name:
-    - fedora-messaging
-    state: present
 
-- name: Create /etc/pki/fedora-messaging
-  file:
-    dest: /etc/pki/fedora-messaging
-    mode: 0775
-    group: root
-    state: directory
-
-- name: Deploy the fedora-messaging CA
-  copy:
-    src: "{{ robosignatory_pki_store }}/fedora-messaging/ca.crt"
-    dest: /etc/pki/fedora-messaging/cacert.pem
-    mode: 0644
-    owner: robosignatory
-    group: robosignatory
-
-- name: Deploy the fedora-messaging cert
-  copy:
-    src: "{{ robosignatory_fedora_messaging_cert }}"
-    dest: /etc/pki/fedora-messaging/robosignatory-cert.pem
-    mode: 0644
-    owner: robosignatory
-    group: robosignatory
-
-- name: Deploy the fedora-messaging key
-  copy:
-    src: "{{ robosignatory_fedora_messaging_key }}"
-    dest: /etc/pki/fedora-messaging/robosignatory-key.pem
-    mode: 0600
-    owner: robosignatory
-    group: robosignatory
+- import_role:
+    name: fedora-messaging-client
+  vars:
+    fedora_messaging_tls_certs: True
+    fedora_messaging_tls_cert: "{{ robosignatory_fedora_messaging_cert }}"
+    fedora_messaging_tls_key: "{{ robosignatory_fedora_messaging_key }}"
+    fedora_messaging_tls_ca: "{{ robosignatory_fedora_messaging_ca }}"
 
 - name: Setup robosignatory config
   template:
@@ -69,9 +41,8 @@
   notify:
   - reload_systemd
 
-- name: Ensure fedora-messaging is enabled and started
+- name: Ensure robosignatory service is enabled and started
   service:
     name: fm-consumer@robosignatory.service
     enabled: yes
     state: started
-  when:  robosignatory_env  == 'stg'

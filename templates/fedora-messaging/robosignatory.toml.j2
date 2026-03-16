@@ -20,9 +20,9 @@ routing_keys = [
 ]
 
 [tls]
-ca_cert = "/etc/pki/fedora-messaging/cacert.pem"
-keyfile = "/etc/pki/fedora-messaging/robosignatory-key.pem"
-certfile = "/etc/pki/fedora-messaging/robosignatory-cert.pem"
+ca_cert = "/etc/fedora-messaging/{{ robosignatory_fedora_messaging_ca }}"
+keyfile = "/etc/fedora-messaging/{{ robosignatory_fedora_messaging_key }}"
+certfile = "/etc/fedora-messaging/{{ robosignatory_fedora_messaging_cert }}"
 
 [client_properties]
 app = "RoboSignatory"

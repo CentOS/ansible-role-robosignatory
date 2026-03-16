@@ -40,6 +40,10 @@ robosignatory_autosign_kerberos_rdns: false
 
 # fedora-messaging URL for robosignatory
 robosignatory_fedora_messaging_amqp_url: amqps://centos-robosignatory:@rabbitmq.fedoraproject.org/%2Fpubsub
+# which tls client/cert to use (copied from pkistore/fedora-messaging/ , imported from fedora-messaging role)
+robosignatory_fedora_messaging_key: my-robosignatory.key
+robosignatory_fedora_messaging_cert: my-robosignatory.crt
+robosignatory_fedora_messaging_ca: ca.crt
 # fedora-messaging message queue for robosignatory
 robosignatory_fedora_messaging_queue: "robosignatory-{{ robosignatory_env }}"
 # fedora-messaging QoS settings for the subscriber thread
