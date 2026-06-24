@@ -1,7 +1,7 @@
 robosignatory_pkgs:
   - python3-robosignatory
-  - trousers
-  - tpm-tools
+  - python3-calligrabot
+  - tpm2-tools
   - gssproxy
   - python3-kobo
   - python3-kobo-rpmlib

@@ -2,11 +2,7 @@
 ---
 - name: Install robosignatory packages
   yum:
-    name:
-      - python3-robosignatory
-      - trousers
-      - tpm-tools
-      - gssproxy
+    name: "{{ robosignatory_pkgs }}"
     state: latest
   tags:
     - pkgs
@@ -55,14 +51,6 @@
     group: robosignatory
     mode: 0640
   when: robosignatory_kojihub_auth_type == 'kerberos'
-
-- name: Install koji CA certificate
-  copy:
-    src: "{{ robosignatory_pki_store }}/koji/{{ robosignatory_kojid_serverca }}"
-    dest: /etc/robosignatory/serverca.cert
-    owner: robosignatory
-    group: robosignatory
-    mode: 0640
 
 - name: Allow robosignatory to use systemd-ask-password
   copy:

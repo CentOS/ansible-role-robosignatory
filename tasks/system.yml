@@ -7,6 +7,7 @@
     - "{{ ansible_distribution }}.yml"
   tags:
     - vars
+    - always
 
 - name: Add the koji buildtools repo if needed
   template:
@@ -24,3 +25,19 @@
   when: robosignatory_buildtools_repo
   tags:
     - repo
+
+- name: Installing rpm-sign helper
+  yum:
+    name: "{{ robosignatory_rpmsign_pkg_url }}"
+    state: installed
+    disable_gpg_check: yes
+  tags:
+    - pkgs
+
+- name: Installing other needed tech-preview pkgs
+  yum:
+    name: "{{ robosignatory_techpreview_pkgs }}"
+    state: installed
+    disable_gpg_check: yes
+  tags:
+    - pkgs

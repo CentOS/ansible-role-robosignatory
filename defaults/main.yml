@@ -7,6 +7,10 @@ robosignatory_env: "{{ centos_infra_env | default('prod') }}"
 # path to external store containing PKI keys/certs
 robosignatory_pki_store: "{{ pkistore | default('./') }}"
 
+# rpm-sign helper url : where to retrieve internally the pkg providing rpm-sign
+robosignatory_rpmsign_pkg_url: http://path.to/pkg.rpm
+
+#
 # koji base URL
 robosignatory_kojihub_top_url: https://kojihub.stream.rdu2.redhat.com
 # koji authentication type
@@ -61,3 +65,9 @@ robosignatory_tags_config:
     signing_key: centosofficial
     signing_keyid: 8483c65d
     type: modular   
+
+
+# list of pkgs to install from external repo, pointing to url, in case not available yet in default os repositories
+# robosignatory_techpreview_pkgs:
+#   - http://mirror.stream.centos.org/10-stream/BaseOS/x86_64/os/Packages/python3-cryptography-48.0.0-3.el10.x86_64.rpm
+robosignatory_techpreview_pkgs: []    

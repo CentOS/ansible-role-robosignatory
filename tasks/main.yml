@@ -2,6 +2,7 @@
 - include_tasks: system.yml
   tags:
     - repo
+    - pkgs
 
 # robosignatory setup
 - include_tasks: robosignatory.yml
