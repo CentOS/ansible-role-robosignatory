@@ -51,6 +51,8 @@
     group: robosignatory
     mode: 0640
   when: robosignatory_kojihub_auth_type == 'kerberos'
+  tags:
+    - koji
 
 - name: Allow robosignatory to use systemd-ask-password
   copy:

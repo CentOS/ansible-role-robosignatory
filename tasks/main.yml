@@ -9,8 +9,10 @@
   tags:
     - koji
     - gssproxy
- 
+    - robosignatory
+
 # fedora-messaging setup
 - include_tasks: fedora-messaging.yml
   tags:
     - config
+    - fedora-messaging
