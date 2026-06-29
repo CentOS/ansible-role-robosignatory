@@ -5,4 +5,4 @@ robosignatory_pkgs:
   - gssproxy
   - python3-kobo
   - python3-kobo-rpmlib
-
+  - java-21-openjdk-headless

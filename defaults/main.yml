@@ -71,3 +71,13 @@ robosignatory_tags_config:
 # robosignatory_techpreview_pkgs:
 #   - http://mirror.stream.centos.org/10-stream/BaseOS/x86_64/os/Packages/python3-cryptography-48.0.0-3.el10.x86_64.rpm
 robosignatory_techpreview_pkgs: []    
+
+# other users that would need to be created for some delegated tasks
+# robosignatory_delegated_users:
+#   - name: composer
+#     shell: /bin/bash
+#     authorized_keys:
+#       - ssh_pub_key1
+#     uid: 32698
+#     gssproxy_enabled: yes # to create right to use gssproxy and use delegated krb5 auth for some scripts
+robosignatory_delegated_users: []

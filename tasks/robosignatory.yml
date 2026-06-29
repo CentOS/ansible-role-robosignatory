@@ -62,6 +62,18 @@
     group: root
     mode: 0644
 
+- name: Adding some helper scripts
+  copy:
+    src: "robosignatory/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - sign_stream_repodata.sh
+  tags:
+    - scripts
+
 - block:
     - name: Configuring gssproxy
       template:
@@ -101,3 +113,40 @@
       
   tags:
     - gssproxy
+
+
+- block:
+    - name: Adding robosignatory delegated users (scripts)
+      user:
+        name: "{{ item.name }}"
+        state: present
+        shell: "{{ item.shell | default('/bin/bash') }}"
+        uid: "{{ item.uid }}"
+      with_items: "{{ robosignatory_delegated_users }}"
+      loop_control:
+        label: "{{ item.name }}"
+    
+    - name: Adding ssh pub keys for delegated users
+      authorized_key:
+        user: "{{ item.0.name }}"
+        key: "{{ item.1 }}"
+      with_subelements:
+        - "{{ robosignatory_delegated_users }}"
+        - authorized_keys
+      loop_control:
+        label: "{{ item.0.name }}"
+    - name: Granting gssproxy access if needed
+      template:
+        src: gssproxy/21-rpmsign-user.conf.j2
+        dest: "/etc/gssproxy/21-rpmsign-{{ item.name }}.conf"
+        owner: root
+        group: root
+        mode: 0600
+      with_items: "{{ robosignatory_delegated_users }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when: item.gssproxy_enabled    
+      notify:   
+        - restart_gssproxy
+  tags:
+    - users

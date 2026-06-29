@@ -10,6 +10,8 @@
     - koji
     - gssproxy
     - robosignatory
+    - users
+    - scripts
 
 # fedora-messaging setup
 - include_tasks: fedora-messaging.yml
