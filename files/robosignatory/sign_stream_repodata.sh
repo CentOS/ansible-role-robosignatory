@@ -2,6 +2,7 @@
 
 # purpose : sign stream repodata through gssproxy for krb5 access to hsm
 
+export GSS_USE_PROXY=yes
 
 release="$1"
 
@@ -16,7 +17,7 @@ pushd /mnt/kojishare/staged/${release}/
 
 for txt in $(find . -name 'repomd.xml');
 do
-    GSS_USE_PROXY=yes rh-signing-client --key=centosofficial --detachsign ${txt} | tee ${txt}.asc
+  rh-signing-client --key=centosofficial --detachsign ${txt} | tee ${txt}.asc
 done
 
 popd
